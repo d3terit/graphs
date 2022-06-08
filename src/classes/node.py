@@ -3,8 +3,9 @@ from ursina.prefabs.radial_menu import *
 from ursina.shaders import colored_lights_shader
 
 class Node(Entity):
-    def __init__(self, name, position, graph, uiconfig, active=True):
+    def __init__(self, id, name, position, graph, uiconfig, active=True):
         super().__init__(position=position)
+        self.id = id
         self.name = name
         self.active = active
         self.obj = NodeObj(self, self.active)
@@ -35,6 +36,14 @@ class Node(Entity):
     def updateEdges(self):
         self.graph.updateEdges(self)
 
+    def showName(self, state):
+        self.text.enabled = state
+
+    def getData(self):
+        return ({"id":self.id,
+                "name":self.name,
+                "active":self.active,
+                "position":list(self.position)})
 
 class NodeObj(Button):
     def __init__(self, node=(), active=True):
@@ -59,6 +68,12 @@ class NodeObj(Button):
                     self.node.moveCam()
             if key == 'right mouse down':
                 self.node.enable_radial_menu()
+    
+    def update(self):
+        if self.hovered:
+            self.node.showName(True)
+        else:
+            self.node.showName(False)
 
 
 class Title(Text):
@@ -69,6 +84,7 @@ class Title(Text):
             position=(-.1, .85, 0),
             scale=13
         )
+        self.enabled=False
 
 
 class RadialMenu(RadialMenu):

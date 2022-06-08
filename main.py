@@ -11,9 +11,9 @@ i = Graph('1', uiconfig)
 
 events = Events(uiconfig, i)
 
-i.addNode(position=(0, 2, 4))
-i.addNode(position=(-5, 3, 0))
-i.addNode(position=(5, -4, 1))
+i.addNode((0, 2, 4),"a")
+i.addNode((-5, 3, 0),"b")
+i.addNode((5, -4, 1),"c"),
 
 graphs = []
 
@@ -30,6 +30,5 @@ def input(key):
 
 def update():
     uiconfig.updateUi()
-
 
 app.run()

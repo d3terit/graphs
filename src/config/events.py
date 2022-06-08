@@ -6,17 +6,23 @@ from .uiConfig import UiConfig
 class Events():
     def __init__(self, uiConfig:UiConfig, graph:Graph):
         self.uiConfig = uiConfig
-        self.uiConfig.events = self
+        self.uiConfig.events= self
         self.graph = graph
 
     def event(self, key):
-        if key == 'n':
-            self.uiConfig.showAddNode()
-        if key == 'k':
-            self.uiConfig.moveCamera((0,0,0))
+        match key:
+            case 'n':
+                self.uiConfig.showAddNode() 
+            case 'k':
+                self.uiConfig.moveCamera((0,0,0))
+            case 'r':
+                self.graph.editNode(())
+            case 'i':
+                self.uiConfig.toggleContent()
+            case 'g':
+                self.uiConfig.showSaveData(self.graph.getData())
 
     def addNode(self, position,name):
-        if not self.graph.addNode(position,name):
-            print('Ya existe el nodo')
+        return self.graph.addNode(position,name)
 
     

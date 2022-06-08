@@ -42,6 +42,13 @@ class Edge(Button):
     def edit(self):
         print('edit')
 
+    def getData(self):
+        print("llego")
+        return ({"nodeStart":self.nodeStart.id,
+                "nodeEnd":self.nodeEnd.id,
+                "direction":self.direction,
+                "weight":self.weight})
+
 class RadialMenu(RadialMenu):
     def __init__(self, edge):
         self.e = RadialMenuButton(text='Eliminar', color=color.red, on_click = edge.remove)
