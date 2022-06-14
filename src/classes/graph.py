@@ -24,6 +24,7 @@ class Graph(Entity):
         self.hamilton = Hamiltoniano(self)
 
     def addNode(self, position=Vec3(0, 0, 0),name=''):
+        self.uiconfig.resetHamilton()
         for n in self.nodes:
             dist = distance(n.position, position)
             if(dist <= 1.3):
@@ -74,7 +75,7 @@ class Graph(Entity):
         self.uiconfig.adyacencia.update(r)
 
     def removeNode(self, node):
-        self.uiconfig.events.showHamilton = False
+        self.uiconfig.resetHamilton()
         self.edgesCompar(node)
         if self.controller.node == node:
             self.editNode(())
@@ -85,7 +86,7 @@ class Graph(Entity):
         self.adyacencia()
     
     def removeEdge(self, edge):
-        self.uiconfig.events.showHamilton = True
+        self.uiconfig.resetHamilton()
         edge.nodeStart.degrees -= 1
         edge.nodeEnd.degrees -= 1
         self.edges.remove(edge)
@@ -110,6 +111,7 @@ class Graph(Entity):
             self.select.clear()
 
     def addEdge(self, nodeStart, nodeEnd, direction = False, weight = 0):
+        self.uiconfig.resetHamilton()
         state = True
         for e in self.edges:
             if (e.nodeStart == nodeStart and e.nodeEnd == nodeEnd) or (e.nodeStart == nodeEnd and e.nodeEnd == nodeStart):
@@ -152,6 +154,8 @@ class Graph(Entity):
         return False
 
     def loadData(self,data):
+        self.uiconfig.resetHamilton()
+        self.subGraphs.clear()
         [destroy(node) for node in self.nodes]
         self.nodes.clear() 
         for node in data["nodes"]:
@@ -175,3 +179,17 @@ class Graph(Entity):
             self.uiconfig.dataHamilton(len(result))
         else: self.uiconfig.dataHamilton(False)
 
+    def showSubGraph(self, index):
+        for edge in self.edges:
+            edge.setState(False,0)
+        for i in range(len(self.subGraphs[index])-1):
+            for edge in self.edges:
+                if str(edge.nodeStart.id) == str(self.subGraphs[index][i].id) and str(edge.nodeEnd.id) == str(self.subGraphs[index][i+1].id):
+                    edge.setState(False,1)
+                else:
+                    if str(edge.nodeEnd.id) == str(self.subGraphs[index][i].id) and str(edge.nodeStart.id) == str(self.subGraphs[index][i+1].id):
+                        edge.setState(False,-1)
+                    
+    def exitSubGraphs(self):
+        for edge in self.edges:
+            edge.setState(True,1)

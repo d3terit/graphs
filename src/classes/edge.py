@@ -21,6 +21,8 @@ class Edge(Button):
         self.reEstructure()
         self.options = RadialMenu(self)
         self.texoffset = 0.0
+        self.state = True
+        self.flowTo = 1
     
     def reEstructure(self):
         dist = distance(self.nodeStart.position, self.nodeEnd.position)
@@ -33,7 +35,7 @@ class Edge(Button):
         self.scale_y = dist/2
 
     def input(self, key):
-        if self.hovered and key == 'right mouse down':
+        if self.hovered and self.state and key  == 'right mouse down':
                 self.enable_radial_menu()
 
     def enable_radial_menu(self):
@@ -52,8 +54,19 @@ class Edge(Button):
                 "weight":self.weight})
 
     def update(self):                               
-        self.texoffset -= time.dt * 0.5     
+        self.texoffset -= time.dt * 0.5 * self.flowTo
         self.texture_offset = (0,self.texoffset) 
+
+    def setState(self, state, flowTo):
+        self.state = state
+        self.flowTo = flowTo
+        if flowTo == 0:
+            self.color = color.rgba(0,250,250,30)
+            self.highlight_color = color.rgba(0,250,250,30)
+        else:
+            self.color=color.rgba(0, 250, 250, 150)
+            if state: self.highlight_color = color.rgba(250, 0, 0, 200)
+            else: self.highlight_color = color.rgba(0, 250, 250, 150)
 
 class RadialMenu(RadialMenu):
     def __init__(self, edge):

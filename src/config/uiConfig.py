@@ -1,7 +1,6 @@
 import json
 from ursina import *
 
-from ..classes.components.navigator import Navigator
 from ..classes.components.hamilton import Hamilton
 from ..classes.components.openData import OpenData
 from ..classes.components.saveData import SaveData
@@ -26,7 +25,7 @@ class UiConfig:
         self.content = Content()
         self.incidencia = Incidencia()
         self.adyacencia = Adyacencia()
-        self.hamilton = Hamilton()
+        self.hamilton = Hamilton(self.showPrevious, self.showNext, self.resetEdges)
         self.saveData = SaveData()
         self.openData = OpenData(self.submit)
         # self.navigator = Navigator()
@@ -70,3 +69,20 @@ class UiConfig:
         file = open(paths[0])
         data = json.load(file)
         self.events.graph.loadData(data)
+        self.resetHamilton()
+        self.events.showHamilton = False
+
+    def showPrevious(self):
+        self.events.showSubGraph(-1)
+
+    def showNext(self):
+        self.events.showSubGraph(1)
+
+    def resetEdges(self):
+        self.events.graph.exitSubGraphs()
+        self.events.index = -1
+
+    def resetHamilton(self):
+        self.events.showHamilton = False
+        self.hamilton.enabled = False
+        self.hamilton.content[2].text = "Ver recorridos"

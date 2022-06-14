@@ -1,7 +1,7 @@
 from ursina import *
 
 class Hamilton(WindowPanel):
-    def __init__(self):
+    def __init__(self, previous, next, reset):
         super().__init__(
             title='Circuitos Hamiltonianos',
             content=(
@@ -10,13 +10,15 @@ class Hamilton(WindowPanel):
                 Button(text='Ver recorridos', color=color.black66, 
                 _on_click = self.toggleContent, enabled = False),
                 Button(text="Anterior", color=color.black33, 
-                _on_click = self.previous, enabled = False),
+                _on_click = previous, enabled = False),
                 Button(text="Siguiente", color=color.black33, 
-                _on_click = self.next, enabled = False)
+                _on_click = next, enabled = False)
             ),
             enabled=False,
             color = color.rgba(60,60,60,100),
             position=(.62,.4))
+        self.reset = reset
+        self.first = next
             
         
     def show(self):
@@ -34,14 +36,10 @@ class Hamilton(WindowPanel):
     def toggleContent(self):
         if self.content[2].text == "Ver recorridos":
             self.content[3].enabled = self.content[4].enabled = True
+            self.first()
             self.content[2].text = "Ocultar recorridos"
         else:
             self.content[3].enabled = self.content[4].enabled = False
+            self.reset()
             self.content[2].text = "Ver recorridos"
 
-
-    def previous(self):
-        pass
-    
-    def next(self):
-        pass
