@@ -11,6 +11,7 @@ class Content(WindowPanel):
                 Space(height=1)
             ),
             enabled=False,
+            color = color.rgba(60,60,60,100),
             position=(.62,-.2))
     
         

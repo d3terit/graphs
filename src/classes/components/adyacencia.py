@@ -9,6 +9,7 @@ class Adyacencia(WindowPanel):
                 Space(height=5)
             ),
             enabled=False,
+            color = color.rgba(60,60,60,100),
             position=(-.62,-.1))
     
         

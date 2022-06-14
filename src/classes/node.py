@@ -1,11 +1,12 @@
 from ursina import *
 from ursina.prefabs.radial_menu import *
-from ursina.shaders import colored_lights_shader
+import uuid
 
 class Node(Entity):
-    def __init__(self, id, name, position, graph, uiconfig, active=True):
+    def __init__(self, name, position, graph, uiconfig, id = "", active=True):
         super().__init__(position=position)
-        self.id = id
+        if len(id) == 0: self.id = uuid.uuid4()
+        else: self.id = uuid.UUID(id)
         self.name = name
         self.active = active
         self.obj = NodeObj(self, self.active)
@@ -13,6 +14,7 @@ class Node(Entity):
         self.graph = graph
         self.ui = uiconfig
         self.options = RadialMenu(self)
+        self.degrees = 0
 
     def enable_radial_menu(self):
         self.options.enabled = True
@@ -30,6 +32,9 @@ class Node(Entity):
     def edit(self):
         self.graph.editNode(self)
 
+    def hamilton(self):
+        self.graph.testHamilton(self)
+
     def currentState(self):
         return (self.graph.currentState())
 
@@ -40,7 +45,7 @@ class Node(Entity):
         self.text.enabled = state
 
     def getData(self):
-        return ({"id":self.id,
+        return ({"id":str(self.id),
                 "name":self.name,
                 "active":self.active,
                 "position":list(self.position)})
@@ -51,9 +56,10 @@ class NodeObj(Button):
             parent=node,
             model= 'sphere',
             collider = 'mesh',
-            color=color.light_gray,
-            highlight_color=color.white,
-            shader = colored_lights_shader
+            color=color.rgba(250,250,250,150),
+            highlight_color=color.rgba(250,250,250,200),
+            # shader = colored_lights_shader,
+            texture = "./../assets/base"
         )
         self.node = node
         if not active:
@@ -95,7 +101,9 @@ class RadialMenu(RadialMenu):
         self.a.on_click = node.addEdge
         self.r = RadialMenuButton(text='Editar')
         self.r.on_click = node.edit
+        self.h = RadialMenuButton(text='HMLTN')
+        self.h.on_click = node.hamilton
         super().__init__(
-            buttons=(self.a, self.r, self.e),
+            buttons=(self.a, self.r, self.e, self.h),
             enabled=False
         )

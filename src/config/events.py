@@ -8,21 +8,24 @@ class Events():
         self.uiConfig = uiConfig
         self.uiConfig.events= self
         self.graph = graph
+        self.showHamilton = False
 
     def event(self, key):
+        openData = self.uiConfig.openData.enabled
+        saveData = self.uiConfig.saveData.enabled
+        newNodo = self.uiConfig.add.enabled
         match key:
             case 'n':
-                self.uiConfig.showAddNode() 
+                if not (saveData or openData): self.uiConfig.showAddNode() 
             case 'k':
-                self.uiConfig.moveCamera((0,0,0))
+                if not (saveData or openData or newNodo): self.uiConfig.moveCamera((0,0,0))
             case 'r':
                 self.graph.editNode(())
             case 'i':
-                self.uiConfig.toggleContent()
+                if not (saveData or openData): self.uiConfig.toggleContent()
             case 'g':
-                self.uiConfig.showSaveData(self.graph.getData())
-
-    def addNode(self, position,name):
-        return self.graph.addNode(position,name)
-
-    
+                if not (openData or newNodo): self.uiConfig.showSaveData(self.graph.getData())
+            case 'o':
+                if not (saveData or newNodo): self.uiConfig.showOpenData()
+            case 'h':
+                if not(newNodo or saveData or openData) and self.showHamilton: self.uiConfig.showHamilton()

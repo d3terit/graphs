@@ -1,0 +1,104 @@
+{
+    "nodes": [
+        {
+            "id": "54cebc20-e1c0-49d5-bb50-077e9de6b036",
+            "name": "A",
+            "active": true,
+            "position": [
+                0.0,
+                2.0,
+                4.0
+            ]
+        },
+        {
+            "id": "a1e4c6de-b101-4325-bc96-ccb36f4cbfd9",
+            "name": "B",
+            "active": true,
+            "position": [
+                -5.0,
+                3.0,
+                0.0
+            ]
+        },
+        {
+            "id": "d226916c-f951-438a-93ff-f1a174283264",
+            "name": "C",
+            "active": true,
+            "position": [
+                5.0,
+                -4.0,
+                1.0
+            ]
+        },
+        {
+            "id": "e473c500-4551-4c58-b5da-12c8206abdb1",
+            "name": "D",
+            "active": true,
+            "position": [
+                4.307409286499023,
+                -4.828942775726318,
+                -3.608214855194092
+            ]
+        },
+        {
+            "id": "1968bebd-c26f-43fc-903f-e1445ae792b9",
+            "name": "E",
+            "active": true,
+            "position": [
+                9.543837547302246,
+                -2.6404199600219727,
+                -3.6345419883728027
+            ]
+        }
+    ],
+    "edges": [
+        {
+            "nodeStart": "a1e4c6de-b101-4325-bc96-ccb36f4cbfd9",
+            "nodeEnd": "54cebc20-e1c0-49d5-bb50-077e9de6b036",
+            "direction": false,
+            "weight": 0
+        },
+        {
+            "nodeStart": "54cebc20-e1c0-49d5-bb50-077e9de6b036",
+            "nodeEnd": "d226916c-f951-438a-93ff-f1a174283264",
+            "direction": false,
+            "weight": 0
+        },
+        {
+            "nodeStart": "d226916c-f951-438a-93ff-f1a174283264",
+            "nodeEnd": "a1e4c6de-b101-4325-bc96-ccb36f4cbfd9",
+            "direction": false,
+            "weight": 0
+        },
+        {
+            "nodeStart": "e473c500-4551-4c58-b5da-12c8206abdb1",
+            "nodeEnd": "a1e4c6de-b101-4325-bc96-ccb36f4cbfd9",
+            "direction": false,
+            "weight": 0
+        },
+        {
+            "nodeStart": "e473c500-4551-4c58-b5da-12c8206abdb1",
+            "nodeEnd": "d226916c-f951-438a-93ff-f1a174283264",
+            "direction": false,
+            "weight": 0
+        },
+        {
+            "nodeStart": "e473c500-4551-4c58-b5da-12c8206abdb1",
+            "nodeEnd": "54cebc20-e1c0-49d5-bb50-077e9de6b036",
+            "direction": false,
+            "weight": 0
+        },
+        {
+            "nodeStart": "1968bebd-c26f-43fc-903f-e1445ae792b9",
+            "nodeEnd": "d226916c-f951-438a-93ff-f1a174283264",
+            "direction": false,
+            "weight": 0
+        },
+        {
+            "nodeStart": "e473c500-4551-4c58-b5da-12c8206abdb1",
+            "nodeEnd": "1968bebd-c26f-43fc-903f-e1445ae792b9",
+            "direction": false,
+            "weight": 0
+        }
+    ]
+}

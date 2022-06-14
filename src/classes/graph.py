@@ -1,10 +1,10 @@
+import uuid
 from ursina import *
 
+from ..utils.hamiltoniano import Hamiltoniano
 from ..utils.controller import Controller
 from .node import Node
 from .edge import Edge
-
-
 class Graph(Entity):
     nodes = []
     edges = []
@@ -21,15 +21,14 @@ class Graph(Entity):
         self.uiconfig = uiconfig
         self.select = []
         self.controller = Controller()
-        self.id = 1;
+        self.hamilton = Hamiltoniano(self)
 
     def addNode(self, position=Vec3(0, 0, 0),name=''):
         for n in self.nodes:
             dist = distance(n.position, position)
             if(dist <= 1.3):
                 return False
-        self.nodes.append(Node(self.id, name.upper(), position, self, self.uiconfig))
-        self.id += 1
+        self.nodes.append(Node(name.upper(), position, self, self.uiconfig))
         self.calNodes()
         self.adyacencia()
         return True
@@ -75,6 +74,7 @@ class Graph(Entity):
         self.uiconfig.adyacencia.update(r)
 
     def removeNode(self, node):
+        self.uiconfig.events.showHamilton = False
         self.edgesCompar(node)
         if self.controller.node == node:
             self.editNode(())
@@ -85,6 +85,9 @@ class Graph(Entity):
         self.adyacencia()
     
     def removeEdge(self, edge):
+        self.uiconfig.events.showHamilton = True
+        edge.nodeStart.degrees -= 1
+        edge.nodeEnd.degrees -= 1
         self.edges.remove(edge)
         destroy(edge)
         self.calEdges()
@@ -96,24 +99,26 @@ class Graph(Entity):
             if edge.nodeStart == node or edge.nodeEnd == node:
                 current = True
                 self.removeEdge(edge)
-                pass
+                break
         if current:
             self.edgesCompar(node)
 
     def addPosition(self, node):
         self.select.append(node)
         if len(self.select) == 2:
-            self.addEdge()
-            self.select = []
+            self.addEdge(self.select[0], self.select[1])
+            self.select.clear()
 
-    def addEdge(self):
+    def addEdge(self, nodeStart, nodeEnd, direction = False, weight = 0):
         state = True
         for e in self.edges:
-            if (e.nodeStart == self.select[0] and e.nodeEnd == self.select[1]) or (e.nodeStart == self.select[1] and e.nodeEnd == self.select[0]):
+            if (e.nodeStart == nodeStart and e.nodeEnd == nodeEnd) or (e.nodeStart == nodeEnd and e.nodeEnd == nodeStart):
                 state = False
-                pass
-        if state and self.select[0] != self.select[1]:
-            self.edges.append(Edge(self.select[0], self.select[1], self))
+                break
+        if state and nodeStart != nodeEnd:
+            nodeStart.degrees += 1
+            nodeEnd.degrees += 1
+            self.edges.append(Edge(nodeStart, nodeEnd, self, direction, weight))
             self.calEdges()
             self.adyacencia()
 
@@ -139,3 +144,34 @@ class Graph(Entity):
         for edge in self.edges:
             data["edges"].append(edge.getData())
         return data
+    
+    def getNode(self, id):
+        for node in self.nodes:
+            if id == str(node.id):
+                return (node)
+        return False
+
+    def loadData(self,data):
+        [destroy(node) for node in self.nodes]
+        self.nodes.clear() 
+        for node in data["nodes"]:
+            pos = Vec3(node["position"][0],node["position"][1],node["position"][2])
+            self.nodes.append(Node(node["name"].upper(), pos, self, self.uiconfig, node["id"],node["active"]))
+        self.edges.clear()
+        for edge in data["edges"]:
+            nodeStart = self.getNode(edge["nodeStart"])
+            nodeEnd = self.getNode(edge["nodeEnd"])
+            self.addEdge(nodeStart, nodeEnd, edge["direction"], edge["weight"])
+
+    def testHamilton(self, nodeStart):
+        self.uiconfig.events.showHamilton = True
+        result = True
+        for node in self.nodes:
+            if node.degrees < 2:
+                result = False
+        if result: result = self.hamilton.test(nodeStart)
+        if result: 
+            self.subGraphs = result
+            self.uiconfig.dataHamilton(len(result))
+        else: self.uiconfig.dataHamilton(False)
+

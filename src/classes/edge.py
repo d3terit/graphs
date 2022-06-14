@@ -3,21 +3,24 @@ from ursina import *
 from ursina.prefabs.radial_menu import *
 
 class Edge(Button):
-    def __init__(self, nodeStart, nodeEnd, graph, direction=False):
+    def __init__(self, nodeStart, nodeEnd, graph,  direction, weight):
         super().__init__(
             model='edge',
             parent=nodeStart,
             collider = 'mesh',
-            color=color.cyan,
-            highlight_color = color.red
+            color=color.rgba(0, 250, 250, 150),
+            highlight_color = color.rgba(250, 0, 0, 200),
+            texture = "./../assets/edge"
+            
         )
         self.nodeStart = nodeStart
         self.nodeEnd = nodeEnd
-        self.reEstructure()
-        self.direction = direction
         self.graph = graph
-        self.weight = 0
+        self.direction = direction
+        self.weight = weight
+        self.reEstructure()
         self.options = RadialMenu(self)
+        self.texoffset = 0.0
     
     def reEstructure(self):
         dist = distance(self.nodeStart.position, self.nodeEnd.position)
@@ -43,11 +46,14 @@ class Edge(Button):
         print('edit')
 
     def getData(self):
-        print("llego")
-        return ({"nodeStart":self.nodeStart.id,
-                "nodeEnd":self.nodeEnd.id,
+        return ({"nodeStart":str(self.nodeStart.id),
+                "nodeEnd":str(self.nodeEnd.id),
                 "direction":self.direction,
                 "weight":self.weight})
+
+    def update(self):                               
+        self.texoffset -= time.dt * 0.5     
+        self.texture_offset = (0,self.texoffset) 
 
 class RadialMenu(RadialMenu):
     def __init__(self, edge):
