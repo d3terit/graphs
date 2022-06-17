@@ -22,6 +22,7 @@ class Graph(Entity):
         self.select = []
         self.controller = Controller()
         self.hamilton = Hamiltoniano(self)
+        self.edit = True
 
     def addNode(self, position=Vec3(0, 0, 0),name=''):
         self.uiconfig.resetHamilton()
@@ -45,11 +46,12 @@ class Graph(Entity):
         a = ""
         i = 0
         for e in self.edges:
-            i+= 1
-            a+= f' {e.nodeStart.name}{e.nodeEnd.name},'
-            if i>8:
-                a+='\n'
-                i = 0
+            if e.flowTo != 0:
+                i+= 1
+                a+= f' {e.nodeStart.name}{e.nodeEnd.name},'
+                if i>8:
+                    a+='\n'
+                    i = 0
         a = "A= {" + f'{a[:-1]}' + " }"
         self.uiconfig.content.update(edges=a)
     
@@ -63,10 +65,11 @@ class Graph(Entity):
             for j in range(len(self.nodes)):
                 m[i+1].append(0)
         for e in self.edges:
-            i = self.nodes.index(e.nodeStart)
-            j = self.nodes.index(e.nodeEnd)
-            m[i+1][j+1] = 1
-            m[j+1][i+1] = 1
+            if e.flowTo != 0:
+                i = self.nodes.index(e.nodeStart)
+                j = self.nodes.index(e.nodeEnd)
+                m[i+1][j+1] = 1
+                m[j+1][i+1] = 1
         r = ""
         for i in m:
             for j in i:
@@ -81,8 +84,6 @@ class Graph(Entity):
             self.editNode(())
         self.nodes.remove(node)
         self.calNodes()
-        self.adyacencia()
-        self.calEdges()
         self.adyacencia()
     
     def removeEdge(self, edge):
@@ -161,11 +162,14 @@ class Graph(Entity):
         for node in data["nodes"]:
             pos = Vec3(node["position"][0],node["position"][1],node["position"][2])
             self.nodes.append(Node(node["name"].upper(), pos, self, self.uiconfig, node["id"],node["active"]))
+        [destroy(edge) for edge in self.edges]
         self.edges.clear()
         for edge in data["edges"]:
             nodeStart = self.getNode(edge["nodeStart"])
             nodeEnd = self.getNode(edge["nodeEnd"])
             self.addEdge(nodeStart, nodeEnd, edge["direction"], edge["weight"])
+        self.calNodes()
+        self.edit = True
 
     def testHamilton(self, nodeStart):
         self.uiconfig.events.showHamilton = True
@@ -180,16 +184,27 @@ class Graph(Entity):
         else: self.uiconfig.dataHamilton(False)
 
     def showSubGraph(self, index):
+        self.edit= False
+        if index < 0: path = f"{len(self.subGraphs) + index + 1}: "
+        else: path = f"{index+1}: "
         for edge in self.edges:
             edge.setState(False,0)
         for i in range(len(self.subGraphs[index])-1):
+            path += f" {self.subGraphs[index][i].name}  - "
             for edge in self.edges:
                 if str(edge.nodeStart.id) == str(self.subGraphs[index][i].id) and str(edge.nodeEnd.id) == str(self.subGraphs[index][i+1].id):
                     edge.setState(False,1)
                 else:
                     if str(edge.nodeEnd.id) == str(self.subGraphs[index][i].id) and str(edge.nodeStart.id) == str(self.subGraphs[index][i+1].id):
                         edge.setState(False,-1)
+        path += f" {self.subGraphs[index][0].name}"
+        self.adyacencia()
+        self.calEdges()
+        return path
                     
     def exitSubGraphs(self):
+        self.edit = True
         for edge in self.edges:
             edge.setState(True,1)
+        self.adyacencia()
+        self.calEdges()

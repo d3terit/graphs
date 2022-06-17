@@ -18,6 +18,7 @@ class Hamilton(WindowPanel):
             color = color.rgba(60,60,60,100),
             position=(.62,.4))
         self.reset = reset
+        self.edges = Text(text="Recorrido ", position=(-.85,.45,-20), enabled=False)
         self.first = next
             
         
@@ -42,4 +43,8 @@ class Hamilton(WindowPanel):
             self.content[3].enabled = self.content[4].enabled = False
             self.reset()
             self.content[2].text = "Ver recorridos"
+            self.edges.enabled = False
 
+    def updatePath(self, path):
+        self.edges.enabled = True
+        if path != None: self.edges.text = f"Recorrido {path}"

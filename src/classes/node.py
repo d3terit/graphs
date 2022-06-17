@@ -66,7 +66,7 @@ class NodeObj(Button):
             self.color = color.white10
 
     def input(self, key):
-        if self.hovered:
+        if self.hovered and self.node.graph.edit:
             if key == 'left mouse down':
                 if self.node.currentState():
                     self.node.addEdge()

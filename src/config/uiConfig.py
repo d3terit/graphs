@@ -16,7 +16,7 @@ class UiConfig:
         window.title = "3D Graphs"
         window.color = color.black90
         self.editor = EditorCamera()
-        self.coor = Entity(parent=camera.ui, position=(-.85,.42))
+        self.coor = Entity(parent=camera.ui, position=(-.85,.35))
         self.x = Text('x: 0', parent=self.coor, position=(0,.03,0), scale=.8)
         self.y = Text('y: 0', parent=self.coor, position=(0,0,0), scale=.8)
         self.z = Text('z: 0', parent=self.coor, position=(0,-.03,0), scale=.8)
@@ -73,10 +73,12 @@ class UiConfig:
         self.events.showHamilton = False
 
     def showPrevious(self):
-        self.events.showSubGraph(-1)
+        path = self.events.showSubGraph(-1)
+        self.hamilton.updatePath(path)
 
     def showNext(self):
-        self.events.showSubGraph(1)
+        path = self.events.showSubGraph(1)
+        self.hamilton.updatePath(path)
 
     def resetEdges(self):
         self.events.graph.exitSubGraphs()

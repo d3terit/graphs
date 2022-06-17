@@ -45,4 +45,5 @@ class Events():
         else:
             if self.index < -len(self.graph.subGraphs):
                 self.index = -1
-        self.graph.showSubGraph(self.index)
+        path = self.graph.showSubGraph(self.index)
+        self.uiConfig.hamilton.updatePath(path)
