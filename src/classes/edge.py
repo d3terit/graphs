@@ -10,8 +10,8 @@ class Edge(Button):
             collider = 'mesh',
             color=color.rgba(0, 250, 250, 150),
             highlight_color = color.rgba(250, 0, 0, 200),
-            texture = "./../assets/edge"
-            
+            texture = "./../assets/edge",
+            scale = 2
         )
         self.nodeStart = nodeStart
         self.nodeEnd = nodeEnd
@@ -61,8 +61,8 @@ class Edge(Button):
         self.state = state
         self.flowTo = flowTo
         if flowTo == 0:
-            self.color = color.rgba(0,250,250,30)
-            self.highlight_color = color.rgba(0,250,250,30)
+            self.color = color.rgba(250,0,250,70)
+            self.highlight_color = color.rgba(250,0,250,70)
         else:
             self.color=color.rgba(0, 250, 250, 150)
             if state: self.highlight_color = color.rgba(250, 0, 0, 200)
