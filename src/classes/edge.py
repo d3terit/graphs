@@ -61,8 +61,8 @@ class Edge(Button):
         self.state = state
         self.flowTo = flowTo
         if flowTo == 0:
-            self.color = color.rgba(250,0,250,70)
-            self.highlight_color = color.rgba(250,0,250,70)
+            self.color = color.rgba(250,0,250,150)
+            self.highlight_color = color.rgba(250,0,250,150)
         else:
             self.color=color.rgba(0, 250, 250, 150)
             if state: self.highlight_color = color.rgba(250, 0, 0, 200)
